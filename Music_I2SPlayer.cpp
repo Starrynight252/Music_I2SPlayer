@@ -63,6 +63,25 @@ void Music_I2SPlayer::begin()
 }
 
 /**
+ * 重新初始化播放器
+ * @param true 初始化成功，false 初始化失败
+ */
+bool Music_I2SPlayer::music_begin()
+{
+    sendCommand(Music_CMD(Music_BEGIN));
+     return getCommandStatus();
+}
+
+/*获取sd卡初始化状态
+* @param true 初始化成功，false 初始化失败
+*/
+bool Music_I2SPlayer::sdcard_begin()
+{
+    sendCommand(Music_CMD_WRITE(Music_BEGIN));
+    return getCommandStatus();
+}
+
+/**
  * 重新加载音频文件，并且停止播放。
  * 如果之前调用过 FilePath 或 FileName 修改了播放文件，则加载修改后的文件；
  * 如果未修改过文件，则加载默认文件 "test.mp3"。。

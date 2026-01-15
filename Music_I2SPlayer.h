@@ -44,6 +44,16 @@ public:
      */
     void begin();
 
+    /* 重新初始化播放器
+    * @param true 初始化成功，false 初始化失败
+    */
+    bool music_begin();
+
+    /*获取sd卡初始化状态
+    * @param true 初始化成功，false 初始化失败
+    */
+    bool sdcard_begin();
+    
     /*
      * 获取指令发送后面状态：
      * @return
