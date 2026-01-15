@@ -14,6 +14,11 @@ int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
         // 行结束
         if (c == '\n' || c == '\r')
         {
+            if(serials->available()) // 清空多余的行结束符
+            {
+                serials->read();
+            }
+
             break;
         }
         else
@@ -44,12 +49,8 @@ int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
             return atoi(resp.substring(pos).c_str());
         }
     }
-    else
-    {
-        return -3;
-    }
 
-    return -3; // 防止未定义返回
+    return -3; // 无数据返回
 }
 
 void Music_I2SPlayer::begin()
