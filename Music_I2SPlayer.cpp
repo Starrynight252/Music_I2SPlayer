@@ -57,8 +57,8 @@ void Music_I2SPlayer::begin()
 {
     // mp3 播放标志位 0停止/空闲 1 播放 2录音
     isPlaying = false;
-    // PCM 播放标志位 0停止/空闲 1 播放 2录音
-    PcmPlayerBit = 0;
+    // WVA_RECORD_ 播放标志位 0停止/空闲 1 播放 2录音
+    WVA_RECORD_PlayerBit = 0;
     serials->begin(115200);
 }
 
@@ -191,15 +191,15 @@ int Music_I2SPlayer::GetVolume()
     return getCommandStatus();
 }
 
-// 设置pcm路径
-int Music_I2SPlayer::FilePath_PCM(const char *filePath)
+// 设置WVA_RECORD_路径
+int Music_I2SPlayer::FilePath_WVA_RECORD(const char *filePath)
 {
     if (filePath == nullptr)
     {
         return -4;
     }
 
-    String cmm = PCM_CMD(Music_FILEPATH);
+    String cmm = WVA_RECORD_CMD(Music_FILEPATH);
     cmm += filePath;
     sendCommand(cmm.c_str());
 
@@ -207,14 +207,14 @@ int Music_I2SPlayer::FilePath_PCM(const char *filePath)
 }
 
 // 默认路径设置文件名称
-int Music_I2SPlayer::FileName_PCM(const char *file)
+int Music_I2SPlayer::FileName_WVA_RECORD(const char *file)
 {
     if (file == nullptr)
     {
         return -4; // false;
     }
 
-    String cmm = PCM_CMD(Music_FILENAME);
+    String cmm = WVA_RECORD_CMD(Music_FILENAME);
     cmm += file;
     sendCommand(cmm.c_str());
 
@@ -232,17 +232,17 @@ int Music_I2SPlayer::IsPlaying()
     return getCommandStatus();
 }
 
-// 重新加载PCM音频文件，并且停止播放。
-int Music_I2SPlayer::Reload_PCM()
+// 重新加载WVA_RECORD_音频文件，并且停止播放。
+int Music_I2SPlayer::Reload_WVA_RECORD()
 {
-    sendCommand(PCM_CMD(Music_RELOAD));
+    sendCommand(WVA_RECORD_CMD(Music_RELOAD));
     return getCommandStatus();
 }
 
 // 开始录音
-int Music_I2SPlayer::StartRecording_PCM(int durationSeconds)
+int Music_I2SPlayer::StartRecording_WVA_RECORD(int durationSeconds)
 {
-    String cmm = PCM_CMD(Music_RECORD);
+    String cmm = WVA_RECORD_CMD(Music_RECORD);
     cmm += String(durationSeconds);
     sendCommand(cmm.c_str());
 
@@ -250,20 +250,20 @@ int Music_I2SPlayer::StartRecording_PCM(int durationSeconds)
 }
 
 // 播放录音
-int Music_I2SPlayer::PlayRecording_PCM()
+int Music_I2SPlayer::PlayRecording_WVA_RECORD()
 {
-    sendCommand(PCM_CMD(Music_PLAY));
+    sendCommand(WVA_RECORD_CMD(Music_PLAY));
     return getCommandStatus();
 }
 
 // 停止播放/录音
-void Music_I2SPlayer::StopRecording_PCM()
+void Music_I2SPlayer::StopRecording_WVA_RECORD()
 {
-    sendCommand(PCM_CMD(Music_STOP));
+    sendCommand(WVA_RECORD_CMD(Music_STOP));
 }
 
-int Music_I2SPlayer::IsPlaying_PCM()
+int Music_I2SPlayer::IsPlaying_WVA_RECORD()
 {
-    sendCommand(PCM_CMD_WRITE(Music_PLAY));
+    sendCommand(WVA_RECORD_CMD_WRITE(Music_PLAY));
     return getCommandStatus();
 }

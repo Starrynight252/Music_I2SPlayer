@@ -10,8 +10,8 @@ class Music_I2SPlayer
 private:
     // mp3 播放标志位 0停止/空闲 1 播放 2录音
     volatile int isPlaying = false;
-    // PCM 播放标志位 0停止/空闲 1 播放 2录音
-    volatile short PcmPlayerBit = 0;
+    // WVA_RECORD_ 播放标志位 0停止/空闲 1 播放 2录音
+    volatile short WVA_RECORD_PlayerBit = 0;
     HardwareSerial *serials;
 
     /*
@@ -148,19 +148,19 @@ public:
      */
     int IsPlaying();
 
-    // 设置pcm路径
-    int FilePath_PCM(const char *filePath);
+    // 设置WVA_RECORD_路径
+    int FilePath_WVA_RECORD(const char *filePath);
     // 默认路径设置文件名称
-    int FileName_PCM(const char *file);
+    int FileName_WVA_RECORD(const char *file);
 
-    // 重新加载PCM音频文件，并且停止播放。
-    int Reload_PCM();
+    // 重新加载WVA_RECORD_音频文件，并且停止播放。
+    int Reload_WVA_RECORD();
     // 开始录音
-    int StartRecording_PCM(int durationSeconds);
+    int StartRecording_WVA_RECORD(int durationSeconds);
     // 播放录音
-    int PlayRecording_PCM();
+    int PlayRecording_WVA_RECORD();
     // 停止播放/录音
-    void StopRecording_PCM();
+    void StopRecording_WVA_RECORD();
     /*
      * 是否正在播放
      * @param none
@@ -170,7 +170,7 @@ public:
      * 2 录音中
      * 未播放返回其他
      */
-    int IsPlaying_PCM();
+    int IsPlaying_WVA_RECORD();
 };
 
 #endif
