@@ -191,8 +191,15 @@ int Music_I2SPlayer::GetVolume()
     return getCommandStatus();
 }
 
+// 获取环境声音/麦克风音量，返回 0~100
+int Music_I2SPlayer::Environmental_sound()
+{
+    sendCommand(WVA_RECORD_CMD(Music_ENV_SOUND));
+    return getCommandStatus();
+}
+
 // 设置WVA_RECORD_路径
-int Music_I2SPlayer::FilePath_wva_record(const char *filePath)
+int Music_I2SPlayer::FilePath_WVA_RECORD(const char *filePath)
 {
     if (filePath == nullptr)
     {
@@ -207,7 +214,7 @@ int Music_I2SPlayer::FilePath_wva_record(const char *filePath)
 }
 
 // 默认路径设置文件名称
-int Music_I2SPlayer::FileName_wva_record(const char *file)
+int Music_I2SPlayer::FileName_WVA_RECORD(const char *file)
 {
     if (file == nullptr)
     {
@@ -233,14 +240,14 @@ int Music_I2SPlayer::IsPlaying()
 }
 
 // 重新加载WVA_RECORD_音频文件，并且停止播放。
-int Music_I2SPlayer::Reload_wva_record()
+int Music_I2SPlayer::Reload_WVA_RECORD()
 {
     sendCommand(WVA_RECORD_CMD(Music_RELOAD));
     return getCommandStatus();
 }
 
 // 开始录音
-int Music_I2SPlayer::StartRecording_wva_record(int durationSeconds)
+int Music_I2SPlayer::StartRecording_WVA_RECORD(int durationSeconds)
 {
     String cmm = WVA_RECORD_CMD(Music_RECORD);
     cmm += String(durationSeconds);
@@ -250,19 +257,19 @@ int Music_I2SPlayer::StartRecording_wva_record(int durationSeconds)
 }
 
 // 播放录音
-int Music_I2SPlayer::PlayRecording_wva_record()
+int Music_I2SPlayer::PlayRecording_WVA_RECORD()
 {
     sendCommand(WVA_RECORD_CMD(Music_PLAY));
     return getCommandStatus();
 }
 
 // 停止播放/录音
-void Music_I2SPlayer::StopRecording_wva_record()
+void Music_I2SPlayer::StopRecording_WVA_RECORD()
 {
     sendCommand(WVA_RECORD_CMD(Music_STOP));
 }
 
-int Music_I2SPlayer::IsPlaying_wva_record()
+int Music_I2SPlayer::IsPlaying_WVA_RECORD()
 {
     sendCommand(WVA_RECORD_CMD_WRITE(Music_PLAY));
     return getCommandStatus();

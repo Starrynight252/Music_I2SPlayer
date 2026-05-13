@@ -56,6 +56,12 @@
 */
 #define Music_BEGIN                    "-Begin"
 
+/* -ENV_SOUND 获取环境声音/麦克风声音
+* 返回值为 0~100，表示环境音量百分比
+* 只支持 WVA_RECORD
+*/
+#define Music_ENV_SOUND                "-ENV_SOUND="
+
 // -----------------------------
 // AT 命令应答宏定义
 // -----------------------------

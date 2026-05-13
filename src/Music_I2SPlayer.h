@@ -138,6 +138,9 @@ public:
      */
     int GetVolume();
 
+    // 获取环境声音/麦克风音量，返回 0~100
+    int Environmental_sound();
+
     /*
      * 是否正在播放
      * @param none
@@ -149,18 +152,18 @@ public:
     int IsPlaying();
 
     // 设置WVA_RECORD_路径
-    int FilePath_wva_record(const char *filePath);
+    int FilePath_WVA_RECORD(const char *filePath);
     // 默认路径设置文件名称
-    int FileName_wva_record(const char *file);
+    int FileName_WVA_RECORD(const char *file);
 
     // 重新加载WVA_RECORD_音频文件，并且停止播放。
-    int Reload_wva_record();
+    int Reload_WVA_RECORD();
     // 开始录音
-    int StartRecording_wva_record(int durationSeconds);
+    int StartRecording_WVA_RECORD(int durationSeconds);
     // 播放录音
-    int PlayRecording_wva_record();
+    int PlayRecording_WVA_RECORD();
     // 停止播放/录音
-    void StopRecording_wva_record();
+    void StopRecording_WVA_RECORD();
     /*
      * 是否正在播放
      * @param none
@@ -170,7 +173,7 @@ public:
      * 2 录音中
      * 未播放返回其他
      */
-    int IsPlaying_wva_record();
+    int IsPlaying_WVA_RECORD();
 };
 
 #endif
