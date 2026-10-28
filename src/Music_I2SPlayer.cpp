@@ -6,7 +6,7 @@ int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
 {
     unsigned long start = millis();
 
-    this->respBuffer.clear();
+    this->respBuffer.remove(0);
 
     while (serials->available())
     {
