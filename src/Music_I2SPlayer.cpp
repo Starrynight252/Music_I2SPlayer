@@ -183,7 +183,7 @@ int Music_I2SPlayer::GetGain()
 {
     sendCommand(Music_CMD(Music_GAIN));
     int ret = getCommandStatus();
-    if (ret)
+    if (ret == 1)
     {
         return getCommandStatusInt();
     }
@@ -201,12 +201,7 @@ int Music_I2SPlayer::SetVolume(int vol)
     cmm += String(vol);
     sendCommand(cmm.c_str());
 
-    int ret = getCommandStatus();
-    if (ret)
-    {
-        return getCommandStatusInt();
-    }
-    return ret;
+    return getCommandStatus();
 }
 
 /*
@@ -218,7 +213,7 @@ int Music_I2SPlayer::GetVolume()
 {
     sendCommand(Music_CMD(Music_VOLUME));
     int ret = getCommandStatus();
-    if (ret)
+    if (ret == 1)
     {
         return getCommandStatusInt();
     }
@@ -230,7 +225,7 @@ int Music_I2SPlayer::Environmental_sound()
 {
     sendCommand(WVA_RECORD_CMD(Music_ENV_SOUND));
     int ret = getCommandStatus();
-    if (ret)
+    if (ret == 1)
     {
         return getCommandStatusInt();
     }
@@ -319,7 +314,7 @@ char* Music_I2SPlayer::GetVersion()
 {
     sendCommand(Music_CMD_WRITE(Music_VERSION));
     int ret = getCommandStatus();
-    if (ret)
+    if (ret == 1)
     {
         return getCommandStatusString();
     }
