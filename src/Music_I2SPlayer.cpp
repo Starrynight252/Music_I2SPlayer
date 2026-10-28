@@ -5,7 +5,8 @@
 int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
 {
     unsigned long start = millis();
-    String resp = "";
+
+    this->respBuffer.clear();
 
     while (serials->available())
     {
@@ -14,7 +15,7 @@ int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
         // 行结束
         if (c == '\n' || c == '\r')
         {
-            if(serials->available()) // 清空多余的行结束符
+            if (serials->available()) // 清空多余的行结束符
             {
                 serials->read();
             }
@@ -23,7 +24,7 @@ int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
         }
         else
         {
-            resp += c;
+            this->respBuffer += c;
         }
 
         if (start && (millis() - start >= timeoutMs))
@@ -33,24 +34,42 @@ int Music_I2SPlayer::getCommandStatus(uint32_t timeoutMs = 600)
         delay(1);
     }
 
-    if (resp.length() > 0)
+    if (this->respBuffer.length() > 0)
     {
-        if (resp.indexOf(Music_ERR) != -1)
+        if (this->respBuffer.indexOf(Music_ERR) != -1 || this->respBuffer.indexOf(Music_ERR_UNKNOWN) != -1)
         {
             return -1;
         }
-        else if (resp.indexOf(Music_OK) != -1)
+        else if (this->respBuffer.indexOf(Music_OK) != -1)
         {
             return 0;
         }
         else
         {
+            // 删除返回值前置，只保留有效值
             size_t pos = strlen(Music_OK_VALUE);
-            return atoi(resp.substring(pos).c_str());
+            this->respBuffer = this->respBuffer.substring(pos);
+
+            // return atoi(this->respBuffer.substring(pos).c_str());
         }
     }
 
     return -3; // 无数据返回
+}
+
+char *Music_I2SPlayer::getCommandStatusString()
+{
+    return (char *)this->respBuffer.c_str();
+}
+
+float Music_I2SPlayer::getCommandStatusFloat()
+{
+    return this->respBuffer.toFloat();
+}
+
+int Music_I2SPlayer::getCommandStatusInt()
+{
+    return this->respBuffer.toInt();
 }
 
 void Music_I2SPlayer::begin()
@@ -69,12 +88,12 @@ void Music_I2SPlayer::begin()
 bool Music_I2SPlayer::music_begin()
 {
     sendCommand(Music_CMD(Music_BEGIN));
-     return getCommandStatus();
+    return getCommandStatus();
 }
 
 /*获取sd卡初始化状态
-* @param true 初始化成功，false 初始化失败
-*/
+ * @param true 初始化成功，false 初始化失败
+ */
 bool Music_I2SPlayer::sdcard_begin()
 {
     sendCommand(Music_CMD_WRITE(Music_BEGIN));
@@ -163,7 +182,12 @@ int Music_I2SPlayer::SetGain(int gain)
 int Music_I2SPlayer::GetGain()
 {
     sendCommand(Music_CMD(Music_GAIN));
-    return getCommandStatus();
+    int ret = getCommandStatus();
+    if (ret)
+    {
+        return getCommandStatusInt();
+    }
+    return ret;
 }
 
 /*
@@ -177,7 +201,12 @@ int Music_I2SPlayer::SetVolume(int vol)
     cmm += String(vol);
     sendCommand(cmm.c_str());
 
-    return getCommandStatus();
+    int ret = getCommandStatus();
+    if (ret)
+    {
+        return getCommandStatusInt();
+    }
+    return ret;
 }
 
 /*
@@ -188,14 +217,24 @@ int Music_I2SPlayer::SetVolume(int vol)
 int Music_I2SPlayer::GetVolume()
 {
     sendCommand(Music_CMD(Music_VOLUME));
-    return getCommandStatus();
+    int ret = getCommandStatus();
+    if (ret)
+    {
+        return getCommandStatusInt();
+    }
+    return ret;
 }
 
 // 获取环境声音/麦克风音量，返回 0~100
 int Music_I2SPlayer::Environmental_sound()
 {
     sendCommand(WVA_RECORD_CMD(Music_ENV_SOUND));
-    return getCommandStatus();
+    int ret = getCommandStatus();
+    if (ret)
+    {
+        return getCommandStatusInt();
+    }
+    return ret;
 }
 
 // 设置WVA_RECORD_路径
@@ -273,4 +312,16 @@ int Music_I2SPlayer::IsPlaying_WVA_RECORD()
 {
     sendCommand(WVA_RECORD_CMD_WRITE(Music_PLAY));
     return getCommandStatus();
+}
+
+// 获取版本号
+char* Music_I2SPlayer::GetVersion()
+{
+    sendCommand(Music_CMD_WRITE(Music_VERSION));
+    int ret = getCommandStatus();
+    if (ret)
+    {
+        return getCommandStatusString();
+    }
+    return nullptr; 
 }

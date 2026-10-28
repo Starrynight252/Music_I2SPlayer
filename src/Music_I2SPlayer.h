@@ -1,3 +1,11 @@
+/*music_i2splayer.h
+ * 文件最后修改时间：2026-10-28
+ * 该文件定义了音乐播放器的抽象类型 Music_I2SPlayer 类。
+ * 该类提供了与音乐播放器相关的功能，包括初始化、播放、停止、设置音量和增益等操作。
+ * 该类使用 HardwareSerial 进行串口通信，并通过发送指令与音乐播放器进行交互。
+*/
+
+
 #ifndef MUSIC_I2SPLAYER_H
 #define MUSIC_I2SPLAYER_H
 
@@ -8,6 +16,8 @@
 class Music_I2SPlayer
 {
 private:
+    // 获取指令返回值缓冲区
+    String respBuffer = "";
     // mp3 播放标志位 0停止/空闲 1 播放 2录音
     volatile int isPlaying = false;
     // WVA_RECORD_ 播放标志位 0停止/空闲 1 播放 2录音
@@ -30,10 +40,10 @@ public:
      *默认使用 Serial2 ，在unoR4Wifil 上Serial2 作为AT串口
      */
     Music_I2SPlayer(HardwareSerial *ats)
-        : serials(ats ? ats : &Serial2){}
+        : serials(ats ? ats : &Serial2) {}
 
     Music_I2SPlayer()
-        : serials(&Serial2){}
+        : serials(&Serial2) {}
 
     ~Music_I2SPlayer() {}
 
@@ -45,25 +55,55 @@ public:
     void begin();
 
     /* 重新初始化播放器
-    * @param true 初始化成功，false 初始化失败
-    */
+     * @param true 初始化成功，false 初始化失败
+     */
     bool music_begin();
 
     /*获取sd卡初始化状态
-    * @param true 初始化成功，false 初始化失败
-    */
+     * @param true 初始化成功，false 初始化失败
+     */
     bool sdcard_begin();
-    
+
     /*
-     * 获取指令发送后面状态：
+     * 获取指令返回状态并且写入respBuffer缓冲区
+     * @param timeoutMs 超时时间，单位毫秒，默认600ms
      * @return
+     *##获取状态:
      * -3 无数据
      * -2 超时
-     * -1 指令返回为 错误
-     * 0 指令返回 为正确
-     * 1~255 成功与指令返回对应值
+     *##指令返回：
+     * -1 指令为错误 （Music_ERR || Music_ERR_UNKNOWN）
+     * 0 指令为正确没有返回值（Music_OK）
+     * 1 指令正确且有返回值（Music_OK_VALUE）
      */
     int getCommandStatus(uint32_t timeoutMs);
+
+    /*
+     * 指令返回值解析为字符串类型,在使用该函数之前，请确保已经调用过 getCommandStatus() 函数，并且返回值为 1（即指令正确且有返回值）。
+     * 无参数。
+     * @return
+     * 缓冲区 respBuffer 中的返回值被解析为字符串类型并返回。
+     * 如果 respBuffer 中的内容无法解析为字符串，将返回空字符串。
+     */
+    char *getCommandStatusString();
+
+    /*
+     * 指令返回值解析为整数类型,在使用该函数之前，请确保已经调用过 getCommandStatus() 函数，并且返回值为 1（即指令正确且有返回值）。
+     * 无参数。
+     * @return
+     * 缓冲区 respBuffer 中的返回值被解析为整数类型并返回。
+     * 如果 respBuffer 中的内容无法解析为整数，将返回 0。
+     */
+    int getCommandStatusInt();
+
+    /*
+     * 指令返回值解析为浮点数类型,在使用该函数之前，请确保已经调用过 getCommandStatus() 函数，并且返回值为 1（即指令正确且有返回值）。
+     * 无参数。
+     * @return
+     * 缓冲区 respBuffer 中的返回值被解析为浮点数类型并返回。
+     * 如果 respBuffer 中的内容无法解析为浮点数，将返回 0.0
+     */
+    float getCommandStatusFloat();
 
     /**
      * 重新加载音频文件，并且停止播放。
@@ -174,6 +214,9 @@ public:
      * 未播放返回其他
      */
     int IsPlaying_WVA_RECORD();
+
+    // 获取版本号
+    char* GetVersion();
 };
 
 #endif

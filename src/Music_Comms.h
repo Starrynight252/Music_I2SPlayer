@@ -1,3 +1,8 @@
+/* Music Commands 
+* 文件最后修改时间：2026-10-28
+* 该文件定义了与音乐播放器相关的命令和宏定义。
+*/
+
 #ifndef MUSIC_COMMANDS_H
 #define MUSIC_COMMANDS_H
 #include "Arduino.h"
@@ -61,6 +66,13 @@
 * 只支持 WVA_RECORD
 */
 #define Music_ENV_SOUND                "-ENV_SOUND="
+
+/*获取当前在项目集成的播放器版本
+* 返回 a.b.c 版本号字符串，例如0.1.3
+* 支持AT和WVA_RECORD
+*/
+#define Music_VERSION                 "-VERSION"
+
 
 // -----------------------------
 // AT 命令应答宏定义
